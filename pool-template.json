@@ -1,0 +1,23 @@
+{
+  "startTask": {
+    "commandLine":"bash nodeprep.sh",
+    "resourceFiles": [ 
+		{
+		  "blobSource":"",
+		  "filePath":"nodeprep.sh"
+		}
+	],
+    "environmentSettings": [ ],
+	"userIdentity": {
+      "autoUser": {
+        "scope":"pool",
+        "elevationLevel":"admin"
+      }
+    },	
+    "maxTaskRetryCount":1,
+    "waitForSuccess":true
+  },
+  "applicationPackageReferences":[ ],
+  "certificateReferences": [ ],
+  "metadata": [ ]
+}
