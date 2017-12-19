@@ -24,3 +24,5 @@ storage_account_name=
 # container name to use to store input job file, bu default the pool name
 container_name=$pool_id
 
+# name of the application package to be used in your pool, leave empty for none
+app_package=

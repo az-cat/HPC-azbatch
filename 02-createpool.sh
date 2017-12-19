@@ -22,9 +22,12 @@ saskey=$(az storage container generate-sas --policy-name rw --name ${container_n
 
 nodeprep_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/nodeprep.sh?${saskey}"
 jq '.startTask.resourceFiles[0].blobSource=$blob' $DIR/pool-template.json --arg blob "$nodeprep_uri" > ${pool_id}-pool.json
-jq '.applicationPackageReferences[0].applicationId=$package | .applicationPackageReferences[0].version="latest"' ${pool_id}-pool.json --arg package "$app_package" > tmp.json
-cp tmp.json ${pool_id}-pool.json
-rm tmp.json
+
+if [ -n "$app_package" ]; then
+    jq '.applicationPackageReferences[0].applicationId=$package | .applicationPackageReferences[0].version="latest"' ${pool_id}-pool.json --arg package "$app_package" > tmp.json
+    cp tmp.json ${pool_id}-pool.json
+    rm tmp.json
+fi
 
 echo "set pool configuration"
 az batch pool set --pool-id $pool_id --json-file ${pool_id}-pool.json
