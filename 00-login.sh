@@ -11,7 +11,10 @@ source $1
 
 required_envvars subscription resource_group batch_account
 
-az account set --subscription $subscription
+az account set \
+    --subscription $subscription
 
 # Authenticate Batch account CLI session.
-az batch account login -g $resource_group -n $batch_account
+az batch account login \
+    -g $resource_group \
+    -n $batch_account
