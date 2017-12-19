@@ -8,10 +8,9 @@ fi
 
 source $1
 
-nodeprep=$DIR/nodeprep.sh
-if [ ! -f ./nodeprep.sh ]; then
-    cp $nodeprep nodeprep.sh
-    nodeprep="./nodeprep.sh"
+nodeprep="./nodeprep.sh"
+if [ ! -f $nodeprep ]; then
+    cp $DIR/nodeprep.sh nodeprep.sh
 fi
 
 required_envvars container_name storage_account_name
