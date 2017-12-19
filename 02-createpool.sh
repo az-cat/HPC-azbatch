@@ -22,14 +22,14 @@ expirary_date="${next_year}T23:59Z"
 echo "expirary date is ${expirary_date}"
 
 az storage container policy create \
-    -c {$container_name} \
+    -c ${container_name} \
     --account-name ${storage_account_name} \
     -n "read" \
     --permissions "lr" \
     --expiry ${expirary_date}
 
 az storage container policy create \
-    -c {$container_name} \
+    -c ${container_name} \
     --account-name ${storage_account_name} \
     -n "write" \
     --permissions "dlrw" \
