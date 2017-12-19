@@ -11,4 +11,6 @@ source $1
 
 required_envvars pool_id
 
-az batch pool resize --pool-id $pool_id --target-dedicated $1
+az batch pool resize \
+    --pool-id $pool_id \
+    --target-dedicated $1

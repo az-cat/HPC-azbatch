@@ -13,5 +13,7 @@ task_id=$3
 
 required_envvars job_id
 
-az batch task show --job-id $job_id --task-id $task_id | jq '.executionInfo '
+az batch task show \
+    --job-id $job_id \
+    --task-id $task_id | jq '.executionInfo '
 

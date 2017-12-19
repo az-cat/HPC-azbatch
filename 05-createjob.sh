@@ -16,15 +16,30 @@ job_template=$DIR/${job_type}-params-template.json
 job_params=${job_id}-params.json
 taskid=$(uuidgen | cut -c1-6)
 
-az storage blob upload --account-name $storage_account_name --container $container_name --file $jobscript --name $jobscript
-az storage blob upload --account-name $storage_account_name --container $container_name --file $coordinationscript --name $coordinationscript
+az storage blob upload \
+    --account-name $storage_account_name \
+    --container $container_name \
+    --file $jobscript \
+    --name $jobscript
+
+az storage blob upload \
+    --account-name $storage_account_name \
+    --container $container_name \
+    --file $coordinationscript \
+    --name $coordinationscript
 
 tar cvf ${taskid}.tgz input
-az storage blob upload --account-name $storage_account_name --container $container_name --file ${taskid}.tgz --name ${taskid}.tgz
+az storage blob upload \
+    --account-name $storage_account_name \
+    --container $container_name \
+    --file ${taskid}.tgz \
+    --name ${taskid}.tgz
 rm ${taskid}.tgz
 
 # Create Job
-az batch job create --id $job_id --pool-id $pool_id
+az batch job create \
+    --id $job_id \
+    --pool-id $pool_id
 
 echo "generating sas key for container $container_name"
 saskey=$(az storage container generate-sas --policy-name rw --name ${container_name} --account-name ${storage_account_name} | jq -r '.')
@@ -50,6 +65,8 @@ container=$(jq -n '.container.path=$taskid | .container.containerUrl=$url' --arg
 
 jq '.id=$tid | .commandLine=$cmdline | .outputFiles[0].destination += $container | .+=$resources | .multiInstanceSettings.numberOfInstances=$numnodes | .multiInstanceSettings.coordinationCommandLine=$coordCli | .multiInstanceSettings+=$commonresources ' --arg tid $taskid --arg cmdline "$commandline" --arg numnodes $numnodes --arg coordCli "$coordination" --argjson container "$container" --argjson resources "$resources" --argjson commonresources "$commonresources" $job_template > $job_params
 
-az batch task create --job-id $job_id --json-file $job_params 
+az batch task create \
+    --job-id $job_id \
+    --json-file $job_params 
 
 echo $job_id $taskid
