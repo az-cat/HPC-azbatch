@@ -19,19 +19,20 @@ az storage container create \
 echo "create container policies"
 next_year=$(date '+%Y-%m-%d' --date='+1 year')
 expirary_date="${next_year}T23:59Z"
+echo "expirary date is ${expirary_date}"
 
 az storage container policy create \
     -c {$container_name} \
     --account-name ${storage_account_name} \
     -n "read" \
-    --permissions lr \
+    --permissions "lr" \
     --expiry ${expirary_date}
 
 az storage container policy create \
     -c {$container_name} \
     --account-name ${storage_account_name} \
     -n "write" \
-    --permissions dlrw \
+    --permissions "dlrw" \
     --expiry ${expirary_date}
 
 echo "generating sas key for container $container_name"
@@ -55,7 +56,7 @@ az batch pool create \
     --enable-inter-node-communication
 
 echo "set pool configuration"
-az batch pool set 
-    --pool-id $pool_id 
+az batch pool set \
+    --pool-id $pool_id \
     --json-file ${pool_id}-pool.json
 
