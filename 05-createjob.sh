@@ -42,7 +42,7 @@ az batch job create \
     --pool-id $pool_id
 
 echo "generating sas key for container $container_name"
-saskey=$(az storage container generate-sas --policy-name rw --name ${container_name} --account-name ${storage_account_name} | jq -r '.')
+saskey=$(az storage container generate-sas --policy-name "write" --name ${container_name} --account-name ${storage_account_name} | jq -r '.')
 
 # create the resource URI for the scripts being executed
 jobscript_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${jobscript}?${saskey}"
