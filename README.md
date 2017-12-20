@@ -8,6 +8,7 @@ Pererequisite is to have an Azure Batch account (Batch Service) and a storage ac
         git clone https://github.com/xpillons/azcycle.git
 
 * Run the samples
+
     Linpack
 
 * Build your own jobs 
