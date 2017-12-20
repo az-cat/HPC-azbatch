@@ -28,6 +28,8 @@ Before starting, update the __params.tpl__ file with the values of your environe
 
 ## Create the job. You can run this command multiple time
 
+Update **numnodes** and **commandline** inside the __linpack-job.tpl__ file to reflect the number of nodes you want to run on, as well as the linpack input params.
+
     ../05-createjob.sh params.tpl linpack-job.tpl
 
 
