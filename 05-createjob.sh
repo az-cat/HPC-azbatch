@@ -15,6 +15,8 @@ required_envvars job_type job_id pool_id storage_account_name container_name job
 job_template=$DIR/${job_type}-params-template.json
 job_params=${job_id}-params.json
 taskid=$(uuidgen | cut -c1-6)
+input_dir=input
+use_input=false
 
 az storage blob upload \
     --account-name $storage_account_name \
@@ -28,13 +30,16 @@ az storage blob upload \
     --file $coordinationscript \
     --name $coordinationscript
 
-tar cvf ${taskid}.tgz input
-az storage blob upload \
-    --account-name $storage_account_name \
-    --container $container_name \
-    --file ${taskid}.tgz \
-    --name ${taskid}.tgz
-rm ${taskid}.tgz
+if [ -d ${input_dir} ]; then
+    tar cvf ${taskid}.tgz ${input_dir}
+    az storage blob upload \
+        --account-name $storage_account_name \
+        --container $container_name \
+        --file ${taskid}.tgz \
+        --name ${taskid}.tgz
+    rm ${taskid}.tgz
+    use_input=true
+fi
 
 # Create Job
 az batch job create \
@@ -47,14 +52,19 @@ saskey=$(az storage container generate-sas --policy-name "write" --name ${contai
 # create the resource URI for the scripts being executed
 jobscript_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${jobscript}?${saskey}"
 coordinationscript_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${coordinationscript}?${saskey}"
-input_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${taskid}.tgz?${saskey}"
+if [ "$use_input" = true ]; then
+    input_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${taskid}.tgz?${saskey}"
+    input_data=$(jq -n '.blobSource=$blob | .filePath=$input_pkg' --arg blob "$input_uri" --arg input_pkg ${taskid}.tgz)
+fi
+
 resource=$(jq -n '.blobSource=$blob | .filePath=$jobscript' --arg blob "$jobscript_uri" --arg jobscript $jobscript)
-input_data=$(jq -n '.blobSource=$blob | .filePath=$input_pkg' --arg blob "$input_uri" --arg input_pkg ${taskid}.tgz)
 commonresource=$(jq -n '.blobSource=$blob | .filePath=$coordinationscript' --arg blob "$coordinationscript_uri" --arg coordinationscript $coordinationscript)
 
 resources=$(jq -n '.resourceFiles=[2]')
 resources=$(jq '.resourceFiles[0] = $data' --argjson data "$resource" <<< $resources)
-resources=$(jq '.resourceFiles[1] = $data' --argjson data "$input_data" <<< $resources)
+if [ "$use_input" = true ]; then
+    resources=$(jq '.resourceFiles[1] = $data' --argjson data "$input_data" <<< $resources)
+fi
 
 commonresources=$(jq -n '.commonResourceFiles=[]')
 commonresources=$(jq '.commonResourceFiles[.commonResourceFiles| length] += $data' --argjson data "$commonresource" <<< $commonresources)
