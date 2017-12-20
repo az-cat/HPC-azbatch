@@ -15,7 +15,6 @@ required_envvars job_type job_id pool_id storage_account_name container_name job
 job_template=$DIR/${job_type}-params-template.json
 job_params=${job_id}-params.json
 taskid=$(uuidgen | cut -c1-6)
-input_dir=input
 use_input=false
 
 az storage blob upload \
