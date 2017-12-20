@@ -29,7 +29,7 @@ az storage blob upload \
     --file $coordinationscript \
     --name $coordinationscript
 
-if [ -z ${input_dir} ] && [ -d ${input_dir} ] ; then
+if [[ -z ${input_dir} ] && [ -d ${input_dir} ]] ; then
     "echo using input directory $input_dir"
     tar cvf ${taskid}.tgz ${input_dir}
     az storage blob upload \
