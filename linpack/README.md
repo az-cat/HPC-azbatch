@@ -33,5 +33,5 @@ Before starting, update the __params.tpl__ file with the values of your environe
 
 ## Monitor your job
 
-Use [Batch Labs]https://azure.github.io/BatchLabs/) to monitor your pools and jobs. 
+Use [Batch Labs](https://azure.github.io/BatchLabs/) to monitor your pools and jobs. 
 
