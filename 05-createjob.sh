@@ -10,7 +10,7 @@ fi
 source $1
 source $2
 
-required_envvars job_type job_id pool_id storage_account_name container_name jobscript coordinationscript
+required_envvars job_type job_id pool_id storage_account_name container_name jobscript coordinationscript input_dir
 
 job_template=$DIR/${job_type}-params-template.json
 job_params=${job_id}-params.json
