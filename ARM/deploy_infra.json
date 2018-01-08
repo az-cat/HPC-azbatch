@@ -221,7 +221,7 @@
               "properties": {
                 "privateIPAllocationMethod": "Dynamic",
                 "publicIPAddress": {
-                  "id": "[resourceId('Microsoft.Network/publicIPAddresses', parameters('nfsIPName'))]"
+                  "id": "[resourceId('Microsoft.Network/publicIPAddresses', 'nfs_ip')]"
                 },
                 "subnet": {
                   "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), variables('nfs_subnet'))]"
