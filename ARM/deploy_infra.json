@@ -81,11 +81,9 @@
       },
       {
         "type": "Microsoft.Network/virtualNetworks/subnets",
-        "name": "[concat(parameters('virtualNetworks_batchvnet_name'), '/', parameters('subnets_admin_name'))]",
-        "apiVersion": "2017-06-01",
-        "scale": null,
+        "name": "[concat(parameters('vnetName'), '/admin')]",
+        "apiVersion": "[variables('networkApiVersion')]",
         "properties": {
-            "provisioningState": "Succeeded",
             "addressPrefix": "10.0.1.0/28",
             "networkSecurityGroup": {
                 "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin_nsg')]"
