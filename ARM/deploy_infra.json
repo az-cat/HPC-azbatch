@@ -54,35 +54,31 @@
           },
           "subnets": [
             {
-              "name": "compute",
-              "properties": {
+            "name": "admin",
+            "properties": {
+                "addressPrefix": "10.0.1.0/28",
+                "networkSecurityGroup" : 
+                {
+                    "id" : "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
+                }
+            }
+            },
+            {
+            "name": "compute",
+            "properties": {
                 "addressPrefix": "10.0.2.0/23",
                 "networkSecurityGroup" : 
                 {
                 }
-              }
+            }
             }
           ],
           "virtualNetworkPeerings": []
         },
         "dependsOn": [ 
+            "admin-nsg"
         ]
       },
-      {
-        "type": "Microsoft.Network/virtualNetworks/subnets",
-        "name": "[concat(parameters('vnetName'), '/admin')]",
-        "apiVersion": "[variables('networkApiVersion')]",
-        "properties": {
-            "addressPrefix": "10.0.1.0/28",
-            "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
-            }
-        },
-        "dependsOn": [
-            "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
-            "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
-        ]
-    },  
       {
         "type": "Microsoft.Network/networkSecurityGroups",
         "name": "admin-nsg",
