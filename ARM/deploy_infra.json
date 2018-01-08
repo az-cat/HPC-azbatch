@@ -66,7 +66,7 @@
             {
               "name": "compute",
               "properties": {
-                "addressPrefix": "10.0.2.0/22",
+                "addressPrefix": "10.0.2.0/23",
                 "networkSecurityGroup" : 
                 {
                 }
@@ -76,7 +76,7 @@
           "virtualNetworkPeerings": []
         },
         "dependsOn": [ 
-          "admin-nsg"
+          "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
         ]
       },
       {
