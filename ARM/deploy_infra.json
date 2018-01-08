@@ -58,7 +58,7 @@
               "properties": {
                 "addressPrefix": "10.0.1.0/28",
                 "networkSecurityGroup" : 
-                  {
+                  {                    
                     "id" : "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
                   }
               }
@@ -79,6 +79,23 @@
           "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
         ]
       },
+      {
+        "type": "Microsoft.Network/virtualNetworks/subnets",
+        "name": "[concat(parameters('virtualNetworks_batchvnet_name'), '/', parameters('subnets_admin_name'))]",
+        "apiVersion": "2017-06-01",
+        "scale": null,
+        "properties": {
+            "provisioningState": "Succeeded",
+            "addressPrefix": "10.0.1.0/28",
+            "networkSecurityGroup": {
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin_nsg')]"
+            }
+        },
+        "dependsOn": [
+            "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
+            "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin_nsg')]"
+        ]
+    },  
       {
         "type": "Microsoft.Network/networkSecurityGroups",
         "name": "admin-nsg",
