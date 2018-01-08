@@ -54,16 +54,6 @@
           },
           "subnets": [
             {
-              "name": "admin",
-              "properties": {
-                "addressPrefix": "10.0.1.0/28",
-                "networkSecurityGroup" : 
-                  {                    
-                    "id" : "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
-                  }
-              }
-            },
-            {
               "name": "compute",
               "properties": {
                 "addressPrefix": "10.0.2.0/23",
@@ -76,7 +66,6 @@
           "virtualNetworkPeerings": []
         },
         "dependsOn": [ 
-          "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
         ]
       },
       {
