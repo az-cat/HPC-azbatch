@@ -205,8 +205,8 @@
           }
         ],
         "dependsOn": [
-          "[resourceId('Microsoft.Network/networkInterfaces', variables('nfsNic'))]",
-          "[parameters('vnetName')]"
+            "[parameters('vnetName')]",
+            "[variables('nfsNic')]"
         ]
       },
       {
@@ -238,6 +238,7 @@
           "primary": true
         },
         "dependsOn": [
+            "[parameters('vnetName')]"
         ]
       }      
     ]
