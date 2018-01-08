@@ -86,12 +86,12 @@
         "properties": {
             "addressPrefix": "10.0.1.0/28",
             "networkSecurityGroup": {
-                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin_nsg')]"
+                "id": "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
             }
         },
         "dependsOn": [
             "[resourceId('Microsoft.Network/virtualNetworks', parameters('vnetName'))]",
-            "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin_nsg')]"
+            "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
         ]
     },  
       {
