@@ -9,7 +9,7 @@ fi
 
 source $1
 
-required_envvars pool_id vm_size vm_image node_agent container_name storage_account_name
+required_envvars pool_id vm_size vm_image node_agent container_name storage_account_name batch_account
 
 echo "create pool container"
 az storage container create \
@@ -49,6 +49,7 @@ fi
 
 echo "create pool ${pool_id}"
 az batch pool create \
+    --account-name $batch_account \
     --id $pool_id \
     --vm-size $vm_size \
     --image $vm_image \
@@ -57,6 +58,7 @@ az batch pool create \
 
 echo "set pool configuration"
 az batch pool set \
+    --account-name $batch_account \
     --pool-id $pool_id \
     --json-file ${pool_id}-pool.json
 

@@ -10,7 +10,7 @@ fi
 source $1
 source $2
 
-required_envvars job_type job_id pool_id storage_account_name container_name jobscript coordinationscript input_dir
+required_envvars job_type job_id pool_id storage_account_name container_name jobscript coordinationscript input_dir batch_account
 
 job_template=$DIR/${job_type}-params-template.json
 job_params=${job_id}-params.json
@@ -43,6 +43,7 @@ fi
 
 # Create Job
 az batch job create \
+    --account-name $batch_account \
     --id $job_id \
     --pool-id $pool_id
 
@@ -76,6 +77,7 @@ container=$(jq -n '.container.path=$taskid | .container.containerUrl=$url' --arg
 jq '.id=$tid | .commandLine=$cmdline | .outputFiles[0].destination += $container | .+=$resources | .multiInstanceSettings.numberOfInstances=$numnodes | .multiInstanceSettings.coordinationCommandLine=$coordCli | .multiInstanceSettings+=$commonresources ' --arg tid $taskid --arg cmdline "$commandline" --arg numnodes $numnodes --arg coordCli "$coordination" --argjson container "$container" --argjson resources "$resources" --argjson commonresources "$commonresources" $job_template > $job_params
 
 az batch task create \
+    --account-name $batch_account \
     --job-id $job_id \
     --json-file $job_params 
 

@@ -9,8 +9,9 @@ fi
 
 source $1
 
-required_envvars pool_id
+required_envvars pool_id batch_account
 
 az batch pool resize \
+    --account-name $batch_account \
     --pool-id $pool_id \
     --target-dedicated $2
