@@ -60,6 +60,12 @@ if [ -n "$app_package" ]; then
     rm tmp.json
 fi
 
+if [ -n "$pool_vnet" ]; then
+    jq '.networkConfiguration.subnetId=$pool_vnet ' ${pool_id}-pool.json --arg pool_vnet "$pool_vnet" > tmp.json
+    cp tmp.json ${pool_id}-pool.json
+    rm tmp.json
+fi
+
 echo "create pool ${pool_id}"
 az batch pool create \
     --account-name $batch_account \

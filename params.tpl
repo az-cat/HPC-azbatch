@@ -26,3 +26,8 @@ container_name=$pool_id
 
 # name of the application package to be used in your pool, leave empty for none
 app_package=
+
+# The ARM resource identifier of the virtual network subnet which the compute nodes of the pool will join
+# The virtual network must be in the same region and subscription as the Azure Batch account
+# /subscriptions/{subscription}/resourceGroups/{group}/providers/Microsoft.Network/virtualNetworks/{network}/subnets/{subnet}
+pool_vnet=
