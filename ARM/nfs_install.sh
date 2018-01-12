@@ -16,12 +16,6 @@ yum -y install nfs-utils nfs-utils-lib
 # Shares
 NFS_DATA=/data
 
-# User
-HPC_USER=hpcuser
-HPC_UID=7007
-HPC_GROUP=hpc
-HPC_GID=7007
-
 # Partitions all data disks attached to the VM 
 #
 setup_data_disks()
@@ -96,9 +90,8 @@ setup_disks()
 	dataDevices="`fdisk -l | grep '^Disk /dev/' | grep $dataDiskSize | awk '{print $2}' | awk -F: '{print $1}' | sort | head -$nbDisks | tr '\n' ' ' | sed 's|/dev/||g'`"
 
 	mkdir -p $NFS_DATA
+    chmod 777 $NFS_DATA
 	setup_data_disks $NFS_DATA "xfs" "$dataDevices" "md10"
-
-    chown $HPC_USER:$HPC_GROUP $NFS_DATA
 	
 	echo "$NFS_DATA    *(rw,async)" >> /etc/exports
 	exportfs
