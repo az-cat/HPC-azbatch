@@ -70,15 +70,4 @@ echo "create pool ${pool_id}"
 az batch pool create \
     --account-name $batch_account \
     --json-file ${pool_id}-pool.json
-#    --id $pool_id \
-#    --vm-size $vm_size \
-#    --image $vm_image \
-#    --node-agent-sku-id "$node_agent" \
-#    --enable-inter-node-communication \
-
-#echo "set pool configuration"
-#az batch pool set \
-#    --account-name $batch_account \
-#    --pool-id $pool_id \
-#    --json-file ${pool_id}-pool.json
 
