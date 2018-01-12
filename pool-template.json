@@ -1,4 +1,15 @@
 {
+  "id": "poolId",
+  "vmSize": "vmSize",
+  "virtualMachineConfiguration": {
+    "imageReference": {
+      "publisher": "",
+      "offer": "",
+      "sku": ""
+    },
+    "nodeAgentSKUId": ""
+  },
+  "enableInterNodeCommunication": true,  
   "startTask": {
     "commandLine":"bash nodeprep.sh",
     "resourceFiles": [ 
