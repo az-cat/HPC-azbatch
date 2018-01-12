@@ -40,11 +40,11 @@ saskey=$(az storage container generate-sas --policy-name "read" --name ${contain
 
 nodeprep_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/nodeprep.sh?${saskey}"
 jq '.id=$poolId | \
-    .vmSize=$vmSize \
-    .virtualMachineConfiguration.nodeAgentSKUId=$node_agent \
-    .virtualMachineConfiguration.imageReference.publisher=$publisher \
-    .virtualMachineConfiguration.imageReference.offer=$offer \
-    .virtualMachineConfiguration.imageReference.sku=$sku \    
+    .vmSize=$vmSize | \
+    .virtualMachineConfiguration.nodeAgentSKUId=$node_agent | \
+    .virtualMachineConfiguration.imageReference.publisher=$publisher | \
+    .virtualMachineConfiguration.imageReference.offer=$offer | \
+    .virtualMachineConfiguration.imageReference.sku=$sku | \    
     .startTask.resourceFiles[0].blobSource=$blob' $DIR/pool-template.json \
     --arg blob "$nodeprep_uri" \
     --arg poolId "$poolId" \
@@ -52,8 +52,7 @@ jq '.id=$poolId | \
     --arg publisher "$(echo $vm_image | cut -d':' -f1)" \
     --arg offer "$(echo $vm_image | cut -d':' -f2)" \
     --arg sku "$(echo $vm_image | cut -d':' -f3)" \
-    --arg node_agent "$node_agent" \
-    > ${pool_id}-pool.json
+    --arg node_agent "$node_agent" > ${pool_id}-pool.json
 
 if [ -n "$app_package" ]; then
     jq '.applicationPackageReferences[0].applicationId=$package | .applicationPackageReferences[0].version="latest"' ${pool_id}-pool.json --arg package "$app_package" > tmp.json
