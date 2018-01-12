@@ -39,12 +39,12 @@ echo "generating sas key for container $container_name"
 saskey=$(az storage container generate-sas --policy-name "read" --name ${container_name} --account-name ${storage_account_name} | jq -r '.')
 
 nodeprep_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/nodeprep.sh?${saskey}"
-jq '.id=$poolId | \
-    .vmSize=$vmSize | \
-    .virtualMachineConfiguration.nodeAgentSKUId=$node_agent | \
-    .virtualMachineConfiguration.imageReference.publisher=$publisher | \
-    .virtualMachineConfiguration.imageReference.offer=$offer | \
-    .virtualMachineConfiguration.imageReference.sku=$sku | \    
+jq '.id=$poolId | 
+    .vmSize=$vmSize | 
+    .virtualMachineConfiguration.nodeAgentSKUId=$node_agent | 
+    .virtualMachineConfiguration.imageReference.publisher=$publisher | 
+    .virtualMachineConfiguration.imageReference.offer=$offer | 
+    .virtualMachineConfiguration.imageReference.sku=$sku |     
     .startTask.resourceFiles[0].blobSource=$blob' $DIR/pool-template.json \
     --arg blob "$nodeprep_uri" \
     --arg poolId "$poolId" \
