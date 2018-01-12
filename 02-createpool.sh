@@ -47,7 +47,7 @@ jq '.id=$poolId |
     .virtualMachineConfiguration.imageReference.sku=$sku |     
     .startTask.resourceFiles[0].blobSource=$blob' $DIR/pool-template.json \
     --arg blob "$nodeprep_uri" \
-    --arg poolId "$poolId" \
+    --arg poolId "$pool_id" \
     --arg vmSize "$vm_size" \
     --arg publisher "$(echo $vm_image | cut -d':' -f1)" \
     --arg offer "$(echo $vm_image | cut -d':' -f2)" \
@@ -63,12 +63,12 @@ fi
 echo "create pool ${pool_id}"
 az batch pool create \
     --account-name $batch_account \
+    --json-file ${pool_id}-pool.json
 #    --id $pool_id \
 #    --vm-size $vm_size \
 #    --image $vm_image \
 #    --node-agent-sku-id "$node_agent" \
 #    --enable-inter-node-communication \
-    --json-file ${pool_id}-pool.json
 
 #echo "set pool configuration"
 #az batch pool set \
