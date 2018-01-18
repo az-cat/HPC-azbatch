@@ -15,6 +15,11 @@ vm_size=Standard_H16r
 vm_image="OpenLogic:CentOS-HPC:7.1"
 node_agent="batch.node.centos 7"
 
+# When using a custom image use image_id and node_agent
+# The custom image must be a managed image resource in the same Azure subscription and region as the Batch account
+# /subscriptions/{subscription}/resourceGroups/{group}/providers/Microsoft.Compute/images/{name}}
+image_id=
+
 # pool name to create
 pool_id=
 

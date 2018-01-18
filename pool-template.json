@@ -5,7 +5,8 @@
     "imageReference": {
       "publisher": "",
       "offer": "",
-      "sku": ""
+      "sku": "",
+      "virtualMachineImageId": ""
     },
     "nodeAgentSKUId": ""
   },
@@ -16,17 +17,20 @@
   "startTask": {
     "commandLine":"bash nodeprep.sh",
     "resourceFiles": [ 
-		{
-		  "blobSource":"",
-		  "filePath":"nodeprep.sh"
-		}
-	],
-    "environmentSettings": [ ],
-	"userIdentity": {
-      "autoUser": {
-        "scope":"pool",
-        "elevationLevel":"admin"
+      {
+        "blobSource":"",
+        "filePath":"nodeprep.sh"
       }
+	  ],
+    "environmentSettings": [
+      {"name":"APP_INSIGHTS_KEY", "value":""},
+      {"name":"APP_INSIGHTS_APP_ID", "value":""}      
+     ],
+    "userIdentity": {
+        "autoUser": {
+          "scope":"pool",
+          "elevationLevel":"admin"
+        }
     },	
     "maxTaskRetryCount":1,
     "waitForSuccess":true

@@ -42,17 +42,26 @@ nodeprep_uri="https://${storage_account_name}.blob.core.windows.net/${container_
 jq '.id=$poolId | 
     .vmSize=$vmSize | 
     .virtualMachineConfiguration.nodeAgentSKUId=$node_agent | 
-    .virtualMachineConfiguration.imageReference.publisher=$publisher | 
-    .virtualMachineConfiguration.imageReference.offer=$offer | 
-    .virtualMachineConfiguration.imageReference.sku=$sku |     
     .startTask.resourceFiles[0].blobSource=$blob' $DIR/pool-template.json \
     --arg blob "$nodeprep_uri" \
     --arg poolId "$pool_id" \
     --arg vmSize "$vm_size" \
+    --arg node_agent "$node_agent" > ${pool_id}-pool.json
+
+# check for custom Image or Gallery Image
+if [ -n "$image_id" ]; then # Custom Image is specified
+    jq '.virtualMachineConfiguration.imageReference.virtualMachineImageId=$imageId' ${pool_id}-pool.json \
+    --arg imageId "$image_id" > tmp.json
+else # Gallery Image
+    jq '.virtualMachineConfiguration.imageReference.publisher=$publisher | 
+        .virtualMachineConfiguration.imageReference.offer=$offer | 
+        .virtualMachineConfiguration.imageReference.sku=$sku' ${pool_id}-pool.json \
     --arg publisher "$(echo $vm_image | cut -d':' -f1)" \
     --arg offer "$(echo $vm_image | cut -d':' -f2)" \
-    --arg sku "$(echo $vm_image | cut -d':' -f3)" \
-    --arg node_agent "$node_agent" > ${pool_id}-pool.json
+    --arg sku "$(echo $vm_image | cut -d':' -f3)" > tmp.json
+fi
+cp tmp.json ${pool_id}-pool.json
+rm tmp.json
 
 if [ -n "$app_package" ]; then
     jq '.applicationPackageReferences[0].applicationId=$package | .applicationPackageReferences[0].version="latest"' ${pool_id}-pool.json --arg package "$app_package" > tmp.json
