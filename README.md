@@ -5,7 +5,7 @@ Pererequisite is to have an Azure Batch account (Batch Service) and a storage ac
 
 * Clone the repo 
 
-        git clone https://github.com/xpillons/azcycle.git
+        git clone https://github.com/xpillons/azbatch.git
 
 * Run the samples
 
