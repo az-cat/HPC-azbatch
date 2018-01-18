@@ -3,7 +3,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/common.sh"
 
 if [ $# != 2 ]; then
-    echo "Usage: $0 <paramsfile> <nbcores>"
+    echo "Usage: $0 <paramsfile> <nbNodes>"
     exit 1
 fi
 
