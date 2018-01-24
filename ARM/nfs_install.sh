@@ -66,6 +66,38 @@ EOF
     fi
 }
 
+setup_single_disk()
+{
+    mountPoint="$1"
+    filesystem="$2"
+    device="$3"
+
+    fdisk -l /dev/$disk || break
+    fdisk /dev/$disk << EOF
+n
+p
+1
+
+
+p
+w
+EOF
+    
+    if [ "$filesystem" == "xfs" ]; then
+        mkfs -t $filesystem /dev/$device
+        echo "/dev/$device $mountPoint $filesystem rw,noatime,attr2,inode64,nobarrier,sunit=1024,swidth=4096,nofail 0 2" >> /etc/fstab
+    else
+        mkfs.ext4 -i 2048 -I 512 -J size=400 -Odir_index,filetype /dev/$device
+        sleep 5
+        tune2fs -o user_xattr /dev/$device
+        echo "/dev/$device $mountPoint $filesystem noatime,nodiratime,nobarrier,nofail 0 2" >> /etc/fstab
+    fi
+        
+    sleep 10
+        
+    mount /dev/$device $mountPoint
+}
+
 setup_disks()
 {      
     # Dump the current disk config for debugging
@@ -91,8 +123,13 @@ setup_disks()
 
 	mkdir -p $NFS_DATA
     chmod 777 $NFS_DATA
-	setup_data_disks $NFS_DATA "xfs" "$dataDevices" "md10"
-	
+
+    if [ $nbDisks=="1" ]; then
+	    setup_single_disk $NFS_DATA "ext4" "$dataDevices" 
+	else
+	    setup_data_disks $NFS_DATA "xfs" "$dataDevices" "md10"
+    fi
+
 	echo "$NFS_DATA    *(rw,async)" >> /etc/exports
 	exportfs
 	exportfs -a
@@ -111,11 +148,13 @@ systemctl enable rpcbind
 systemctl enable nfs-server
 systemctl enable nfs-lock
 systemctl enable nfs-idmap
+systemctl enable nfs
 
 systemctl start rpcbind
 systemctl start nfs-server
 systemctl start nfs-lock
 systemctl start nfs-idmap
+systemctl start nfs
 
 setup_disks
 
