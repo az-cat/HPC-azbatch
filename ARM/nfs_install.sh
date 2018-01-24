@@ -85,7 +85,7 @@ EOF
     
     if [ "$filesystem" == "xfs" ]; then
         mkfs -t $filesystem /dev/$device
-        echo "/dev/$device $mountPoint $filesystem rw,noatime,attr2,inode64,nobarrier,sunit=1024,swidth=4096,nofail 0 2" >> /etc/fstab
+        echo "/dev/$device $mountPoint $filesystem rw,noatime,attr2,inode64,nobarrier,nofail 0 2" >> /etc/fstab
     else
         mkfs.ext4 -i 2048 -I 512 -J size=400 -Odir_index,filetype /dev/$device
         sleep 5

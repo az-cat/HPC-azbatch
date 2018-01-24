@@ -11,9 +11,6 @@
     "nodeAgentSKUId": ""
   },
   "enableInterNodeCommunication": true,
-  "networkConfiguration": {
-    "subnetId":""
-  },
   "startTask": {
     "commandLine":"bash nodeprep.sh",
     "resourceFiles": [ 
