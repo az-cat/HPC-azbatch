@@ -82,7 +82,7 @@ envSettings=$(jq '.environmentSettings[.environmentSettings| length] += $data' -
 # application package
 applicationPackageReferences=$(jq -n '.applicationPackageReferences=[]')
 if [ -n "$task_app_package" ]; then
-    appPackageJson = $(jq -n '.applicationId=$package | .version="latest"' --arg package "$task_app_package")
+    appPackageJson=$(jq -n '.applicationId=$package | .version="latest"' --arg package "$task_app_package")
     applicationPackageReferences=$(jq '.applicationPackageReferences[.applicationPackageReferences| length] += $data' --argjson data "$appPackageJson" <<< $applicationPackageReferences)    
 fi
 
