@@ -79,7 +79,14 @@ envVariable=$(jq -n '.name="JOB_CONTAINER_URL" | .value=$jobUrl' --arg jobUrl $c
 envSettings=$(jq -n '.environmentSettings=[]')
 envSettings=$(jq '.environmentSettings[.environmentSettings| length] += $data' --argjson data "$envVariable" <<< $envSettings)
 
-jq '.id=$tid | . += $envSettings | .commandLine=$cmdline | .outputFiles[0].destination += $container | .+=$resources | .multiInstanceSettings.numberOfInstances=$numnodes | .multiInstanceSettings.coordinationCommandLine=$coordCli | .multiInstanceSettings+=$commonresources ' \
+# application package
+applicationPackageReferences=$(jq -n '.applicationPackageReferences=[]')
+if [ -n "$task_app_package" ]; then
+    appPackageJson = $(jq -n '.applicationId=$package | .version="latest"' --arg package "$task_app_package")
+    applicationPackageReferences=$(jq '.applicationPackageReferences[.applicationPackageReferences| length] += $data' --argjson data "$appPackageJson" <<< $applicationPackageReferences)    
+fi
+
+jq '.id=$tid | . += $envSettings | . += $applicationPackageReferences  | .commandLine=$cmdline | .outputFiles[0].destination += $container | .+=$resources | .multiInstanceSettings.numberOfInstances=$numnodes | .multiInstanceSettings.coordinationCommandLine=$coordCli | .multiInstanceSettings+=$commonresources ' \
     --arg tid $taskid \
     --arg cmdline "$commandline" \
     --arg numnodes $numnodes \
@@ -87,6 +94,7 @@ jq '.id=$tid | . += $envSettings | .commandLine=$cmdline | .outputFiles[0].desti
     --argjson container "$container" \
     --argjson resources "$resources" \
     --argjson commonresources "$commonresources" \
+    --argjson applicationPackageReferences "$applicationPackageReferences" \
     --argjson envSettings "$envSettings" $job_template > $job_params
 
 az batch task create \

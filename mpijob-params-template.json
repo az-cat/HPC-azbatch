@@ -38,5 +38,6 @@
 			"scope":"pool",
 			"elevationLevel":"admin"
 		}
-	}
+	},
+	"applicationPackageReferences":[ ]	
 }
