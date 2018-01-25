@@ -74,7 +74,20 @@ commonresources=$(jq '.commonResourceFiles[.commonResourceFiles| length] += $dat
 container_url="https://${storage_account_name}.blob.core.windows.net/${container_name}?${saskey}"
 container=$(jq -n '.container.path=$taskid | .container.containerUrl=$url' --arg taskid $taskid --arg url $container_url)
 
-jq '.id=$tid | .commandLine=$cmdline | .outputFiles[0].destination += $container | .+=$resources | .multiInstanceSettings.numberOfInstances=$numnodes | .multiInstanceSettings.coordinationCommandLine=$coordCli | .multiInstanceSettings+=$commonresources ' --arg tid $taskid --arg cmdline "$commandline" --arg numnodes $numnodes --arg coordCli "$coordination" --argjson container "$container" --argjson resources "$resources" --argjson commonresources "$commonresources" $job_template > $job_params
+# add environment variable
+envVariable=$(jq -n '.name="JOB_CONTAINER_URL" | .value=$jobUrl' --arg jobUrl $container_url)
+envSettings=$(jq -n '.environmentSettings=[]')
+envSettings=$(jq '.environmentSettings[.environmentSettings| length] += $data' --argjson data "$envVariable" <<< $envSettings)
+
+jq '.id=$tid | . += $envSettings | .commandLine=$cmdline | .outputFiles[0].destination += $container | .+=$resources | .multiInstanceSettings.numberOfInstances=$numnodes | .multiInstanceSettings.coordinationCommandLine=$coordCli | .multiInstanceSettings+=$commonresources ' \
+    --arg tid $taskid \
+    --arg cmdline "$commandline" \
+    --arg numnodes $numnodes \
+    --arg coordCli "$coordination" \
+    --argjson container "$container" \
+    --argjson resources "$resources" \
+    --argjson commonresources "$commonresources" \
+    --argjson envSettings "$envSettings" $job_template > $job_params
 
 az batch task create \
     --account-name $batch_account \
