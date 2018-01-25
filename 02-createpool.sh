@@ -79,7 +79,7 @@ fi
 
 # if enviroment variable file exists, merge it
 if [ -f $envsettings ]; then
-    jq '.startTask.environmentSettings=$data' $poolfile --argfile data $envsettings > tmp.json
+    jq '.startTask += $data' $poolfile --argfile data $envsettings > tmp.json
     cp tmp.json $poolfile
     rm tmp.json    
 fi
