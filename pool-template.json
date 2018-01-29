@@ -29,7 +29,7 @@
           "elevationLevel":"admin"
         }
     },	
-    "maxTaskRetryCount":1,
+    "maxTaskRetryCount":3,
     "waitForSuccess":true
   },
   "applicationPackageReferences":[ ],
