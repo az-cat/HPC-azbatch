@@ -3,7 +3,7 @@ jobscript=runme.sh
 coordinationscript=runme-coord.sh
 job_id=runme
 job_type=mpijob
-numnodes=
+numnodes=$1
 
 # the coordination command line to start on all nodes part of the MPI job. This is used to synch nodes before starting
 coordination='bash $AZ_BATCH_TASK_SHARED_DIR/'${coordinationscript}

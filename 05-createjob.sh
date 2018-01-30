@@ -2,13 +2,13 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/common.sh"
 
-if [ $# != 2 ]; then
-    echo "Usage: $0 <paramsfile> <jobparamsfile>"
+if [ $# != 3 ]; then
+    echo "Usage: $0 <paramsfile> <jobparamsfile> <nbnodes>"
     exit 1
 fi
 
 source $1
-source $2
+source $2 $3
 
 required_envvars job_type job_id pool_id storage_account_name container_name jobscript coordinationscript input_dir batch_account
 
