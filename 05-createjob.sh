@@ -12,6 +12,8 @@ source $2 $3
 
 required_envvars job_type job_id pool_id storage_account_name container_name jobscript coordinationscript input_dir batch_account
 
+jobenvsettings="./${job_id}-jobenvsettings.json"
+
 job_template=$DIR/${job_type}-params-template.json
 job_params=${job_id}-params.json
 taskid=$(uuidgen | cut -c1-6)
@@ -76,7 +78,11 @@ container=$(jq -n '.container.path=$taskid | .container.containerUrl=$url' --arg
 
 # add environment variable
 envVariable=$(jq -n '.name="JOB_CONTAINER_URL" | .value=$jobUrl' --arg jobUrl $container_url)
+# if environment variable job file exists, merge it
 envSettings=$(jq -n '.environmentSettings=[]')
+if [ -f $jobenvsettings ]; then
+    envSettings=$(jq '.' $jobenvsettings)
+fi
 envSettings=$(jq '.environmentSettings[.environmentSettings| length] += $data' --argjson data "$envVariable" <<< $envSettings)
 
 # application package
