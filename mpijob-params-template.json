@@ -19,8 +19,20 @@
 		"uploadOptions" : {
 			"uploadCondition" : "taskCompletion"
 			}
-		}
-	],
+		},
+		{
+			"filePattern" : "*.*",
+			"destination" : {
+				"container" : {
+					"path" : "",
+					"containerUrl": ""
+				}
+			},
+			"uploadOptions" : {
+				"uploadCondition" : "taskCompletion"
+				}
+			}
+		],
 	"multiInstanceSettings":
 	{
 		"commonResourceFiles" :
