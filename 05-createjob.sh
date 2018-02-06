@@ -92,7 +92,7 @@ if [ -n "$task_app_package" ]; then
     applicationPackageReferences=$(jq '.applicationPackageReferences[.applicationPackageReferences| length] += $data' --argjson data "$appPackageJson" <<< $applicationPackageReferences)    
 fi
 
-jq '.id=$tid | . += $envSettings | . += $applicationPackageReferences  | .commandLine=$cmdline | .outputFiles[0].destination += $container | .+=$resources | .multiInstanceSettings.numberOfInstances=$numnodes | .multiInstanceSettings.coordinationCommandLine=$coordCli | .multiInstanceSettings+=$commonresources ' \
+jq '.id=$tid | . += $envSettings | . += $applicationPackageReferences  | .commandLine=$cmdline | .outputFiles[0].destination += $container | .outputFiles[1].destination += $container | .+=$resources | .multiInstanceSettings.numberOfInstances=$numnodes | .multiInstanceSettings.coordinationCommandLine=$coordCli | .multiInstanceSettings+=$commonresources ' \
     --arg tid $taskid \
     --arg cmdline "$commandline" \
     --arg numnodes $numnodes \
