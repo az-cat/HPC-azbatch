@@ -16,3 +16,7 @@ input_dir=
 
 # the application package to use for that task if different from the pool one
 task_app_package=
+
+# job specific environment variables
+# format is '[{"name":"variable1", "value":"value1"},{"name":"variable2", "value":"value2"}]'
+jobenvsettings='[]'

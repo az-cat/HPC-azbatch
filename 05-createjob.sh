@@ -78,10 +78,12 @@ container=$(jq -n '.container.path=$taskid | .container.containerUrl=$url' --arg
 
 # add environment variable
 envVariable=$(jq -n '.name="JOB_CONTAINER_URL" | .value=$jobUrl' --arg jobUrl $container_url)
-# if environment variable job file exists, merge it
-envSettings=$(jq -n '.environmentSettings=[]')
-if [ -f $jobenvsettings ]; then
-    envSettings=$(jq '.' $jobenvsettings)
+
+# if job environment variables exists, merge them
+if [ -n "$jobenvsettings" ]; then
+    envSettings=$(jq -n '.environmentSettings += $data' --argjson data "$jobenvsettings")
+else
+    envSettings=$(jq -n '.environmentSettings=[]')
 fi
 envSettings=$(jq '.environmentSettings[.environmentSettings| length] += $data' --argjson data "$envVariable" <<< $envSettings)
 
