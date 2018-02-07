@@ -12,8 +12,6 @@ source $2 $3
 
 required_envvars job_type job_id pool_id storage_account_name container_name jobscript coordinationscript input_dir batch_account
 
-jobenvsettings="./${job_id}-jobenvsettings.json"
-
 job_template=$DIR/${job_type}-params-template.json
 job_params=${job_id}-params.json
 taskid=$(uuidgen | cut -c1-6)
