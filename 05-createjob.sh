@@ -21,13 +21,13 @@ az storage blob upload \
     --account-name $storage_account_name \
     --container $container_name \
     --file $jobscript \
-    --name $jobscript
+    --name "${taskid}/$jobscript"
 
 az storage blob upload \
     --account-name $storage_account_name \
     --container $container_name \
     --file $coordinationscript \
-    --name $coordinationscript
+    --name "${taskid}/$coordinationscript"
 
 if [ -n "${input_dir}" ] && [ -d ${input_dir} ] ; then
     echo "using input directory $input_dir"
@@ -36,7 +36,7 @@ if [ -n "${input_dir}" ] && [ -d ${input_dir} ] ; then
         --account-name $storage_account_name \
         --container $container_name \
         --file ${taskid}.tgz \
-        --name ${taskid}.tgz
+        --name "${taskid}/${taskid}.tgz"
     rm ${taskid}.tgz
     use_input=true
 fi
@@ -51,10 +51,11 @@ echo "generating sas key for container $container_name"
 saskey=$(az storage container generate-sas --policy-name "write" --name ${container_name} --account-name ${storage_account_name} | jq -r '.')
 
 # create the resource URI for the scripts being executed
-jobscript_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${jobscript}?${saskey}"
-coordinationscript_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${coordinationscript}?${saskey}"
+task_root_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}"
+jobscript_uri="${task_root_uri}/${taskid}/${jobscript}?${saskey}"
+coordinationscript_uri="${task_root_uri}/${taskid}/${coordinationscript}?${saskey}"
 if [ "$use_input" = true ]; then
-    input_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${taskid}.tgz?${saskey}"
+    input_uri="${task_root_uri}/${taskid}/${taskid}.tgz?${saskey}"
     input_data=$(jq -n '.blobSource=$blob | .filePath=$input_pkg' --arg blob "$input_uri" --arg input_pkg ${taskid}.tgz)
 fi
 
@@ -71,7 +72,7 @@ commonresources=$(jq -n '.commonResourceFiles=[]')
 commonresources=$(jq '.commonResourceFiles[.commonResourceFiles| length] += $data' --argjson data "$commonresource" <<< $commonresources)
 
 # create the container URI for storing automatically the results
-container_url="https://${storage_account_name}.blob.core.windows.net/${container_name}?${saskey}"
+container_url="${task_root_uri}/?${saskey}"
 container=$(jq -n '.container.path=$taskid | .container.containerUrl=$url' --arg taskid $taskid --arg url $container_url)
 
 # add environment variable
