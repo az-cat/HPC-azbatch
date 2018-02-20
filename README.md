@@ -11,4 +11,8 @@ Pererequisite is to have an Azure Batch account (Batch Service) and a storage ac
 
     Linpack
 
+* Learn how other applications can be launched
+
+    Ansys Fluent
+
 * Build your own jobs 
