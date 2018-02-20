@@ -19,10 +19,6 @@
         "filePath":"nodeprep.sh"
       }
 	  ],
-    "environmentSettings": [
-      {"name":"APP_INSIGHTS_KEY", "value":""},
-      {"name":"APP_INSIGHTS_APP_ID", "value":""}      
-     ],
     "userIdentity": {
         "autoUser": {
           "scope":"pool",

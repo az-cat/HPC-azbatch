@@ -77,7 +77,7 @@ if [ -n "$pool_vnet" ]; then
     rm tmp.json
 fi
 
-# if enviroment variable file exists, merge it
+# if environment variable file exists, merge it
 if [ -f $envsettings ]; then
     jq '.startTask += $data' $poolfile --argfile data $envsettings > tmp.json
     cp tmp.json $poolfile
