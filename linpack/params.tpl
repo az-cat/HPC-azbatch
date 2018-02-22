@@ -16,7 +16,7 @@ vm_image="OpenLogic:CentOS-HPC:7.1"
 node_agent="batch.node.centos 7"
 
 # pool name to create
-pool_id=
+pool_id=linpack
 
 # azure storage account link to the batch account
 storage_account_name=
@@ -25,4 +25,4 @@ storage_account_name=
 container_name=$pool_id
 
 # name of the application package to be used in your pool, leave empty for none
-app_package=
+app_package=hpl

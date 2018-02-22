@@ -1,13 +1,34 @@
 # How to run Linpack with azbatch ?
 
-Before starting, update the __params.tpl__ file with the values of your environemnt, and copy the HPL binaries and dependencies into the hpl subdirectory, then run these commands
+After cloning the repo, change directory to the linpack subdir and execute these steps
+
+## Download HPL
+
+Download the HPL binaries from our storage by running these command
+
+    ~/HPC-azbatch/linpack$ wget "https://azcathpcsane.blob.core.windows.net/apps/hpl.tgz?sv=2017-04-17&si=read&sr=c&sig=%2BKP1aEa0ciOyckj11PxDlqoYfiXQKDhDOaJSwkbzCig%3D" -O hpl.tgz
+    
+    ~/HPC-azbatch/linpack$ tar xvf hpl.tgz
+
+
+## Update **params.tpl**
+Update the **params.tpl** file with the values specific to your environment :
+
+* **subscription** : subscription id where your batch account is created
+* **resource_group** : the resource group in which the batch account is 
+* **batch_account** : the name of the batch account
+* **storage_account_name** : the storage account linked with your batch account
+
+
 
 ## Login to the Azure Batch account
+When using several azure accounts you can use `az account list` to list the accounts.
 
     ../00-login.sh params.tpl
 
 
 ## Create the HPL application package
+
 
     ../01-createapppackage.sh params.tpl hpl.tpl
 
@@ -28,9 +49,16 @@ Before starting, update the __params.tpl__ file with the values of your environe
 
 ## Create the job. You can run this command multiple time
 
-Update **numnodes** and **commandline** inside the __linpack-job.tpl__ file to reflect the number of nodes you want to run on, as well as the linpack input params.
+In the __linpack-job.tpl__ file update these values to reflect the number of nodes you want to run on :
 
-    ../05-createjob.sh params.tpl linpack-job.tpl
+* **hpl_N** : This is the problem size. The larger it is the more memory per node will be used,
+* **hpl_P** and **hpl_P** : choose P & Q so that `PxQ = numnodes*ppn` ,
+* **hpl_NB** : Block size. See the readme.txt inside the hpl package for details.
+
+
+
+    ../05-createjob.sh params.tpl linpack-job.tpl <nbnodes>
+
 
 
 ## Monitor your job

@@ -1,7 +1,17 @@
 # azbatch
-Azure batch CLI recipes and scripts to easily run applications
+CLI recipes and scripts to easily run MPI applications with Azure Batch.
 
-Pererequisite is to have an Azure Batch account (Batch Service) and a storage account linked to it. Make sure to have enough quota.
+Pererequisite is to have an Azure Batch account (Batch Service) and a storage account linked to it. Make sure to have enough quota for the VMs you want to use in your region.
+
+# Quickstart
+
+1. Open a Linux session with Azure CLI v2.0, jq and zip packages installed.
+
+2. Clone the repository, `git clone https://github.com/az-cat/HPC-azbatch.git`
+
+3. Grant execute access to scripts `chmod +x *.sh`
+
+
 
 ## Clone the repo 
 
