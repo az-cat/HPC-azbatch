@@ -17,8 +17,29 @@ Pererequisite is to have an Azure Batch account (Batch Service) and a storage ac
 
 ## Quickly add an NFS server
 
+If you need an NFS server which can also be used as a jumpbox, the companion ARM template file [here](./ARM/deploy_infra.json) will create :
+
+* A 10.0.0.0/20 VNET with two subnets
+
+    * admin subnet on 10.0.0.1/28
+    * compute subnet on 10.0.2.0/23
+
+* A Standard_D8s_v3 VM, running CentOS 7.4, named **nfsnode**
+* A public IP to connect to that VM
+* 1 TB of attached premium disk (P30)
+* NSG rules
+
+    * Open SSH on the public IP
+    * Deny internet incoming communication
+
+
+Before starting make sure you have enough quota for DS_v3 in the region you want to deploy. The button below will kickoff the deployment and you will need to provide these parameters :
+
+* Name of the vnet to create
+* Name of the admin user (default being hpcadmin)
+* The public RSA key to use
+
+
   [![Click to deploy template on Azure](http://azuredeploy.net/deploybutton.png "Click to deploy template on Azure")](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Faz-cat%2FHPC-azbatch%2Fmaster%2FARM%2Fdeploy_infra.json) 
-
-
 
 
