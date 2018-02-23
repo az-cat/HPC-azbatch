@@ -9,12 +9,21 @@ fi
 
 source $1
 
-required_envvars subscription resource_group batch_account
+required_envvars subscription resource_group AZURE_BATCH_ACCOUNT
 
 az account set \
     --subscription $subscription
 
 # Authenticate Batch account CLI session.
-az batch account login \
-    -g $resource_group \
-    -n $batch_account
+if [ "$AZURE_BATCH_ACCESS_KEY" ]; then
+    echo "login thru shared key"
+    az batch account login \
+        -g $resource_group \
+        -n $AZURE_BATCH_ACCOUNT \
+        --shared-key-auth
+else
+    echo "login thru Azure AD"
+    az batch account login \
+        -g $resource_group \
+        -n $AZURE_BATCH_ACCOUNT
+fi

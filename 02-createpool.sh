@@ -9,7 +9,7 @@ fi
 
 source $1
 
-required_envvars pool_id vm_size vm_image node_agent container_name storage_account_name batch_account
+required_envvars pool_id vm_size vm_image node_agent container_name storage_account_name AZURE_BATCH_ACCOUNT
 envsettings="./${pool_id}-envsettings.json"
 poolfile=${pool_id}-pool.json
 
@@ -86,6 +86,5 @@ fi
 
 echo "create pool ${pool_id}"
 az batch pool create \
-    --account-name $batch_account \
     --json-file $poolfile
 

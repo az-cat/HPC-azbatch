@@ -10,7 +10,7 @@ fi
 source $1
 source $2 $3
 
-required_envvars job_type job_id pool_id storage_account_name container_name jobscript coordinationscript input_dir batch_account
+required_envvars job_type job_id pool_id storage_account_name container_name jobscript coordinationscript input_dir AZURE_BATCH_ACCOUNT
 
 job_template=$DIR/${job_type}-params-template.json
 job_params=${job_id}-params.json
@@ -44,7 +44,6 @@ fi
 
 # Create Job
 az batch job create \
-    --account-name $batch_account \
     --id $job_id \
     --pool-id $pool_id
 
@@ -106,7 +105,6 @@ jq '.id=$tid | . += $envSettings | . += $applicationPackageReferences  | .comman
     --argjson envSettings "$envSettings" $job_template > $job_params
 
 az batch task create \
-    --account-name $batch_account \
     --job-id $job_id \
     --json-file $job_params 
 

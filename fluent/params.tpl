@@ -4,8 +4,9 @@ subscription=
 # resource group of the batch account
 resource_group=
 
-# batch account
-batch_account=
+# batch account - if key is empty Azure AD auth will be used
+AZURE_BATCH_ACCOUNT=
+AZURE_BATCH_ACCESS_KEY=
 
 # Azure VM size
 vm_size=Standard_H16r 

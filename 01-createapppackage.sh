@@ -10,26 +10,26 @@ fi
 source $1
 source $2
 
-required_envvars app_id app_name app_version resource_group batch_account
+required_envvars app_id app_name app_version resource_group AZURE_BATCH_ACCOUNT
 
 zip -r $app_id.zip $app_id
 
 az batch application create \
     --resource-group $resource_group \
-    --name $batch_account \
+    --name $AZURE_BATCH_ACCOUNT \
     --application-id $app_id \
     --display-name "$app_name"
 
 az batch application package create \
     --resource-group $resource_group \
-    --name $batch_account \
+    --name $AZURE_BATCH_ACCOUNT \
     --application-id $app_id \
     --package-file ${app_id}.zip \
     --version $app_version
 
 az batch application set \
     --resource-group $resource_group \
-    --name $batch_account \
+    --name $AZURE_BATCH_ACCOUNT \
     --application-id $app_id \
     --default-version $app_version
 

@@ -12,11 +12,6 @@ Pererequisite is to have an Azure Batch account (Batch Service) and a storage ac
 3. Grant execute access to scripts `chmod +x *.sh`
 
 
-
-## Clone the repo 
-
-        git clone https://github.com/xpillons/azbatch.git
-
 ## Build your own jobs 
 
 

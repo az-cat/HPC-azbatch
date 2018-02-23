@@ -11,10 +11,9 @@ source $1
 source $2
 task_id=$3
 
-required_envvars job_id batch_account
+required_envvars job_id AZURE_BATCH_ACCOUNT
 
 az batch task show \
-    --account-name $batch_account \
     --job-id $job_id \
     --task-id $task_id | jq '.executionInfo '
 
