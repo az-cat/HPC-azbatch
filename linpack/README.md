@@ -56,10 +56,10 @@ In the __linpack-job.tpl__ file update these values to reflect the number of nod
 * **hpl_P** and **hpl_P** : choose P & Q so that `PxQ = numnodes*ppn` ,
 * **hpl_NB** : Block size. See the readme.txt inside the hpl package for details.
 
+and then run
 
 
     ../05-createjob.sh params.tpl linpack-job.tpl <nbnodes>
-
 
 
 ## Monitor your job
