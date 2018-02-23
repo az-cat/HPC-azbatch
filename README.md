@@ -5,12 +5,10 @@ Pererequisite is to have an Azure Batch account (Batch Service) and a storage ac
 
 # Quickstart
 
-1. Open a Linux session with Azure CLI v2.0, jq and zip packages installed.
-
+1. Open a [Cloud Shell](https://docs.microsoft.com/en-us/azure/cloud-shell/overview) session from the Azure Portal, or open a Linux session with Azure CLI v2.0, jq and zip packages installed.
 2. Clone the repository, `git clone https://github.com/az-cat/HPC-azbatch.git`
-
 3. Grant execute access to scripts `chmod +x *.sh`
-
+4. Run the [Linpack](./linpack/README.md) sample
 
 ## Build your own jobs 
 

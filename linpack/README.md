@@ -16,7 +16,8 @@ Update the **params.tpl** file with the values specific to your environment :
 
 * **subscription** : subscription id where your batch account is created
 * **resource_group** : the resource group in which the batch account is 
-* **batch_account** : the name of the batch account
+* **AZURE_BATCH_ACCOUNT** : the name of the batch account
+* **AZURE_BATCH_ACCESS_KEY** : batch account key
 * **storage_account_name** : the storage account linked with your batch account
 
 
