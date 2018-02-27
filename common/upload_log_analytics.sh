@@ -7,6 +7,7 @@ logName=$2
 key=$3
 jsonFile=$4
 
+echo "uploading $jsonFile to Azure Log Analytics workspace $workspace_id"
 content=$(cat $jsonFile | iconv -t utf8)
 content_len=${#content}
 
