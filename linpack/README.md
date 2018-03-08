@@ -52,7 +52,7 @@ When using several azure accounts you can use `az account list` to list the acco
 
 In the __linpack-job.tpl__ file update these values to reflect the number of nodes you want to run on :
 
-* **hpl_N** : This is the problem size. The larger it is the more memory per node will be used,
+* **hpl_MEM_GB** : This is the memory in GB used on each node. The HPL problem size will be calculated from it. 
 * **hpl_P** and **hpl_P** : choose P & Q so that `PxQ = numnodes*ppn` ,
 * **hpl_NB** : Block size. See the readme.txt inside the hpl package for details.
 
