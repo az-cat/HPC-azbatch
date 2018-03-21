@@ -7,7 +7,7 @@ variable "location" {
   default     = "westeurope"
 }
 
-variable "vnetname" {
-  description = "VNET name to create."
-  default     = "myvnet"
+variable "prefix" {
+  description = "prefix to create resources"
+  default     = "foo"
 }
