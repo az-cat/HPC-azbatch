@@ -20,7 +20,7 @@ resource "azurerm_virtual_network" "vnet" {
 resource "azurerm_subnet" "adminvnet" {
   name                 = "admin"
   virtual_network_name = "${var.prefix}-vnet"
-  resource_group_name  = "${azurerm_resource_group.mainrg.name}"
+  resource_group_name  = "${azurerm_resource_group.main.name}"
   address_prefix       = "10.0.1.0/28"
 }
 
