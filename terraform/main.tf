@@ -5,7 +5,7 @@
 #   tenant_id       = "REPLACE-WITH-YOUR-TENANT-ID"
 # }
 
-resource "azurerm_resource_group" "rg" {
+resource "azurerm_resource_group" "main" {
   name     = "${var.resource_group}"
   location = "${var.location}"
 }
@@ -14,20 +14,20 @@ resource "azurerm_virtual_network" "vnet" {
   virtual_network_name = "${var.prefix}-vnet"
   location            = "${var.location}"
   address_space       = ["10.0.0.0/20"]
-  resource_group_name = "${azurerm_resource_group.rg.name}"
+  resource_group_name = "${azurerm_resource_group.main.name}"
 }
 
 resource "azurerm_subnet" "adminvnet" {
   name                 = "admin"
   virtual_network_name = "${var.prefix}-vnet"
-  resource_group_name  = "${azurerm_resource_group.rg.name}"
+  resource_group_name  = "${azurerm_resource_group.mainrg.name}"
   address_prefix       = "10.0.1.0/28"
 }
 
 resource "azurerm_subnet" "computevnet" {
   name                 = "compute"
   virtual_network_name = "${var.prefix}-vnet"
-  resource_group_name  = "${azurerm_resource_group.rg.name}"
+  resource_group_name  = "${azurerm_resource_group.main.name}"
   address_prefix       = "10.0.2.0/23"
 }
 
