@@ -46,6 +46,6 @@ variable "admin_username" {
   default     = "hpcadmin"
 }
 
-variable "ssk_keys" {
+variable "ssh_key_data" {
   description = "administrator ssk_keys"
 }
