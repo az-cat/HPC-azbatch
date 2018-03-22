@@ -73,3 +73,55 @@ resource "azurerm_network_interface" "main" {
     public_ip_address_id          = "${azurerm_public_ip.main.id}"
   }
 }
+
+
+resource "azurerm_managed_disk" "datadisk" {
+  name                 = "${var.vm_name}-datadisk"
+  location             = "${azurerm_resource_group.main.location}"
+  resource_group_name  = "${azurerm_resource_group.main.name}"
+  storage_account_type = "Premium_LRS"
+  create_option        = "Empty"
+  disk_size_gb         = "1023"
+}
+
+resource "azurerm_virtual_machine" "vm" {
+  name                  = "${var.vm_name}"
+  location              = "${azurerm_resource_group.main.location}"
+  resource_group_name   = "${azurerm_resource_group.main.name}"
+  vm_size               = "${var.vm_size}"
+  network_interface_ids = ["${azurerm_network_interface.main.id}"]
+
+  storage_image_reference {
+    publisher = "${var.image_publisher}"
+    offer     = "${var.image_offer}"
+    sku       = "${var.image_sku}"
+    version   = "${var.image_version}"
+  }
+
+  storage_os_disk {
+    name              = "${var.vm_name}-osdisk"
+    managed_disk_type = "Premium_LRS"
+    caching           = "ReadWrite"
+    create_option     = "FromImage"
+  }
+
+  storage_data_disk {
+    name              = "${var.vm_name}-datadisk"
+    managed_disk_id   = "${azurerm_managed_disk.datadisk.id}"
+    managed_disk_type = "Premium_LRS"
+    disk_size_gb      = "1023"
+    create_option     = "Attach"
+    lun               = 0
+  }
+
+  os_profile {
+    computer_name  = "${var.vm_name}"
+    admin_username = "${var.admin_username}"
+    ssh_keys = "${var.ssk_keys}"
+  }
+
+  os_profile_linux_config {
+    disable_password_authentication = true    
+  }
+
+}
