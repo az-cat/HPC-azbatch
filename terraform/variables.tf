@@ -47,5 +47,5 @@ variable "admin_username" {
 }
 
 variable "ssh_key_data" {
-  description = "administrator ssk_keys"
+  description = "administrator ssh_keys"
 }
