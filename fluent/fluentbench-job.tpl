@@ -13,7 +13,7 @@ coordination='bash $AZ_BATCH_TASK_SHARED_DIR/'${coordinationscript}
 case=aircraft_wing_14m
 
 launcher='$AZ_BATCH_TASK_WORKING_DIR/'${jobscript}' '${numcores}' '${case}' '${ppn}
-commandline='sudo -E -u _azbatch bash -c "'${launcher}'"'
+commandline='bash -c "'${launcher}'"'
 
 # input directory that contains data to be uploaded for that task
 input_dir=

@@ -9,6 +9,6 @@ hpl_MEM_GB=4
 hpl_P=2
 hpl_Q=$numnodes
 hpl_NB=192
-commandline='sudo -E -u _azbatch bash $AZ_BATCH_TASK_WORKING_DIR/'${jobscript}' '$numnodes' '$ppn' '$hpl_MEM_GB' '$hpl_P' '$hpl_Q' '$hpl_NB
+commandline='bash $AZ_BATCH_TASK_WORKING_DIR/'${jobscript}' '$numnodes' '$ppn' '$hpl_MEM_GB' '$hpl_P' '$hpl_Q' '$hpl_NB
 jobenvsettings='[{"name":"ANALYTICS_WORKSPACE", "value":""},{"name":"ANALYTICS_KEY", "value":""}]'
 input_dir=

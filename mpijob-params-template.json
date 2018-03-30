@@ -48,7 +48,7 @@
 	"userIdentity": {
 		"autoUser": {
 			"scope":"pool",
-			"elevationLevel":"admin"
+			"elevationLevel":"nonadmin"
 		}
 	},
 	"applicationPackageReferences":[ ]	
