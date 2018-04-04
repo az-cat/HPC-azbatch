@@ -72,8 +72,8 @@ setup_single_disk()
     filesystem="$2"
     device="$3"
 
-    fdisk -l /dev/$disk || break
-    fdisk /dev/$disk << EOF
+    fdisk -l /dev/$device || break
+    fdisk /dev/$device << EOF
 n
 p
 1
