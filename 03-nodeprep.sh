@@ -11,7 +11,7 @@ source $1
 
 required_envvars container_name storage_account_name nodeprep
 
-#nodeprep="./nodeprep.sh"
+nodeprep="./${nodeprep}"
 if [ ! -f $nodeprep ]; then
     cp $DIR/$nodeprep.sh $nodeprep.sh
 fi
