@@ -8,12 +8,13 @@ fi
 
 source $1
 
-nodeprep="./nodeprep.sh"
-if [ ! -f $nodeprep ]; then
-    cp $DIR/nodeprep.sh nodeprep.sh
-fi
 
-required_envvars container_name storage_account_name
+required_envvars container_name storage_account_name nodeprep
+
+#nodeprep="./nodeprep.sh"
+if [ ! -f $nodeprep ]; then
+    cp $DIR/$nodeprep.sh $nodeprep.sh
+fi
 
 az storage blob upload \
     --account-name $storage_account_name \

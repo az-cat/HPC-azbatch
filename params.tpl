@@ -14,10 +14,10 @@ vm_size=Standard_H16r
 # The image reference is in the format: {publisher}:{offer}:{sku}:{version} where {version} is
 # optional and will default to 'latest'.
 # see https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage
-# 
+# az vm image list --output table
 vm_image="OpenLogic:CentOS-HPC:7.1"
 
-# To list supported node agent use: az batch pool node-agent-skus list
+# To list supported node agent use: az batch pool node-agent-skus list --output table
 node_agent="batch.node.centos 7"
 
 # When using a custom image use image_id and node_agent
