@@ -50,7 +50,7 @@ jq '.id=$poolId |
     --arg blob "$nodeprep_uri" \
     --arg poolId "$pool_id" \
     --arg vmSize "$vm_size" \
-    --arg ppm $taskpernode \
+    --arg ppn $taskpernode \
     --arg node_agent "$node_agent" > $poolfile
 
 # check for custom Image or Gallery Image
