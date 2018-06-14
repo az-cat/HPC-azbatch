@@ -13,11 +13,11 @@ required_envvars container_name storage_account_name nodeprep
 
 nodeprep="./${nodeprep}"
 if [ ! -f $nodeprep ]; then
-    cp $DIR/$nodeprep.sh $nodeprep.sh
+    cp $DIR/$nodeprep $nodeprep
 fi
 
 az storage blob upload \
     --account-name $storage_account_name \
     --container $container_name \
     --file $nodeprep \
-    --name nodeprep.sh
+    --name $nodeprep
