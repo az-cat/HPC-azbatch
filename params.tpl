@@ -11,6 +11,9 @@ AZURE_BATCH_ACCESS_KEY=
 # Azure VM size
 vm_size=Standard_H16r 
 
+# max task per node. 1 for MPI. number of cores for embarassingly parrallel tasks
+taskpernode=1
+
 # The image reference is in the format: {publisher}:{offer}:{sku}:{version} where {version} is
 # optional and will default to 'latest'.
 # see https://docs.microsoft.com/en-us/azure/virtual-machines/linux/cli-ps-findimage

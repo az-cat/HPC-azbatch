@@ -8,10 +8,9 @@ if [ $# != 2 ]; then
 fi
 
 source $1
-# $DIR/pool-template.json
 pool_template=$2
 
-required_envvars pool_id vm_size vm_image node_agent container_name storage_account_name AZURE_BATCH_ACCOUNT nodeprep
+required_envvars pool_id vm_size vm_image node_agent container_name storage_account_name AZURE_BATCH_ACCOUNT nodeprep taskpernode
 envsettings="./${pool_id}-envsettings.json"
 poolfile=${pool_id}-pool.json
 
@@ -45,11 +44,13 @@ saskey=$(az storage container generate-sas --policy-name "read" --name ${contain
 nodeprep_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${nodeprep}?${saskey}"
 jq '.id=$poolId | 
     .vmSize=$vmSize | 
+    .maxTasksPerNode= $ppn |
     .virtualMachineConfiguration.nodeAgentSKUId=$node_agent | 
     .startTask.resourceFiles[0].blobSource=$blob' ${pool_template} \
     --arg blob "$nodeprep_uri" \
     --arg poolId "$pool_id" \
     --arg vmSize "$vm_size" \
+    --arg ppm $taskpernode \
     --arg node_agent "$node_agent" > $poolfile
 
 # check for custom Image or Gallery Image
