@@ -2,14 +2,16 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 source "$DIR/common.sh"
 
-if [ $# != 1 ]; then
-    echo "Usage: $0 <paramsfile>"
+if [ $# != 2 ]; then
+    echo "Usage: $0 <paramsfile> <pool-template>"
     exit 1
 fi
 
 source $1
+# $DIR/pool-template.json
+pool_template=$2
 
-required_envvars pool_id vm_size vm_image node_agent container_name storage_account_name AZURE_BATCH_ACCOUNT
+required_envvars pool_id vm_size vm_image node_agent container_name storage_account_name AZURE_BATCH_ACCOUNT nodeprep
 envsettings="./${pool_id}-envsettings.json"
 poolfile=${pool_id}-pool.json
 
@@ -40,11 +42,11 @@ az storage container policy create \
 echo "generating sas key for container $container_name"
 saskey=$(az storage container generate-sas --policy-name "read" --name ${container_name} --account-name ${storage_account_name} | jq -r '.')
 
-nodeprep_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/nodeprep.sh?${saskey}"
+nodeprep_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${nodeprep}?${saskey}"
 jq '.id=$poolId | 
     .vmSize=$vmSize | 
     .virtualMachineConfiguration.nodeAgentSKUId=$node_agent | 
-    .startTask.resourceFiles[0].blobSource=$blob' $DIR/pool-template.json \
+    .startTask.resourceFiles[0].blobSource=$blob' ${pool_template} \
     --arg blob "$nodeprep_uri" \
     --arg poolId "$pool_id" \
     --arg vmSize "$vm_size" \

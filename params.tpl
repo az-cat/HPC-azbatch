@@ -28,6 +28,9 @@ image_id=
 # pool name to create
 pool_id=
 
+# pool start task script name
+nodeprep=
+
 # azure storage account link to the batch account
 storage_account_name=
 
