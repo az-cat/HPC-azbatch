@@ -11,7 +11,7 @@ Before starting, update the __params.tpl__ file with the values of your environm
 
 ## Create the Fluent Node Pool
 
-    ../02-createpool.sh params.tpl
+    ../02-createpool.sh params.tpl ../pool-template.json
 
 
 ## Set the pool to use nodeprep.sh at startup

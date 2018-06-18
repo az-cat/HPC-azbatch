@@ -36,7 +36,7 @@ When using several azure accounts you can use `az account list` to list the acco
 
 ## Create the HPL Node Pool
 
-    ../02-createpool.sh params.tpl
+    ../02-createpool.sh params.tpl ../pool-template.json
 
 
 ## Set the pool to use nodeprep.sh at startup
