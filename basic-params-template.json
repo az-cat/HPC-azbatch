@@ -1,0 +1,43 @@
+{
+	"id":"",
+	"commandLine": "",
+	"resourceFiles": [ 
+		{
+		  "blobSource":"",
+		  "filePath":""
+		}  
+	],
+	"outputFiles" : [
+		{
+		"filePattern" : "../std*.*",
+		"destination" : {
+			"container" : {
+				"path" : "",
+				"containerUrl": ""
+			}
+		},
+		"uploadOptions" : {
+			"uploadCondition" : "taskCompletion"
+			}
+		},
+		{
+		"filePattern" : "*.*",
+		"destination" : {
+			"container" : {
+				"path" : "",
+				"containerUrl": ""
+			}
+		},
+		"uploadOptions" : {
+			"uploadCondition" : "taskCompletion"
+			}
+		}
+	],
+	"userIdentity": {
+		"autoUser": {
+			"scope":"pool",
+			"elevationLevel":"nonadmin"
+		}
+	},
+	"applicationPackageReferences":[ ]	
+}

@@ -10,13 +10,18 @@ fi
 source $1
 source $2 $3
 
-required_envvars job_type job_id pool_id storage_account_name container_name jobscript coordinationscript input_dir AZURE_BATCH_ACCOUNT
+required_envvars job_type job_id pool_id storage_account_name container_name jobscript input_dir AZURE_BATCH_ACCOUNT
 
 job_template=$DIR/${job_type}-params-template.json
 job_params=${job_id}-params.json
 taskid=$(date "+%Y%m%d-%H%M%S")
 #taskid=$(uuidgen | cut -c1-6)
 use_input=false
+mpi_job=false
+if [ "$job_type" == "mpijob" ]; then
+    mpi_job=true
+fi
+
 
 az storage blob upload \
     --account-name $storage_account_name \
@@ -24,11 +29,13 @@ az storage blob upload \
     --file $jobscript \
     --name "${taskid}/$jobscript"
 
-az storage blob upload \
-    --account-name $storage_account_name \
-    --container $container_name \
-    --file $coordinationscript \
-    --name "${taskid}/$coordinationscript"
+if [ "$mpi_job" = true ]; then
+    az storage blob upload \
+        --account-name $storage_account_name \
+        --container $container_name \
+        --file $coordinationscript \
+        --name "${taskid}/$coordinationscript"
+fi
 
 if [ -n "${input_dir}" ] && [ -d ${input_dir} ] ; then
     echo "using input directory $input_dir"
@@ -53,14 +60,12 @@ saskey=$(az storage container generate-sas --policy-name "write" --name ${contai
 # create the resource URI for the scripts being executed
 task_root_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}"
 jobscript_uri="${task_root_uri}/${taskid}/${jobscript}?${saskey}"
-coordinationscript_uri="${task_root_uri}/${taskid}/${coordinationscript}?${saskey}"
 if [ "$use_input" = true ]; then
     input_uri="${task_root_uri}/${taskid}/${taskid}.tgz?${saskey}"
     input_data=$(jq -n '.blobSource=$blob | .filePath=$input_pkg' --arg blob "$input_uri" --arg input_pkg ${taskid}.tgz)
 fi
 
 resource=$(jq -n '.blobSource=$blob | .filePath=$jobscript' --arg blob "$jobscript_uri" --arg jobscript $jobscript)
-commonresource=$(jq -n '.blobSource=$blob | .filePath=$coordinationscript' --arg blob "$coordinationscript_uri" --arg coordinationscript $coordinationscript)
 
 resources=$(jq -n '.resourceFiles=[2]')
 resources=$(jq '.resourceFiles[0] = $data' --argjson data "$resource" <<< $resources)
@@ -68,8 +73,12 @@ if [ "$use_input" = true ]; then
     resources=$(jq '.resourceFiles[1] = $data' --argjson data "$input_data" <<< $resources)
 fi
 
-commonresources=$(jq -n '.commonResourceFiles=[]')
-commonresources=$(jq '.commonResourceFiles[.commonResourceFiles| length] += $data' --argjson data "$commonresource" <<< $commonresources)
+if [ "$mpi_job" = true ]; then
+    coordinationscript_uri="${task_root_uri}/${taskid}/${coordinationscript}?${saskey}"
+    commonresource=$(jq -n '.blobSource=$blob | .filePath=$coordinationscript' --arg blob "$coordinationscript_uri" --arg coordinationscript $coordinationscript)
+    commonresources=$(jq -n '.commonResourceFiles=[]')
+    commonresources=$(jq '.commonResourceFiles[.commonResourceFiles| length] += $data' --argjson data "$commonresource" <<< $commonresources)
+fi
 
 # create the container URI for storing automatically the results
 container_url="${task_root_uri}/?${saskey}"
@@ -93,16 +102,26 @@ if [ -n "$task_app_package" ]; then
     applicationPackageReferences=$(jq '.applicationPackageReferences[.applicationPackageReferences| length] += $data' --argjson data "$appPackageJson" <<< $applicationPackageReferences)    
 fi
 
-jq '.id=$tid | . += $envSettings | . += $applicationPackageReferences  | .commandLine=$cmdline | .outputFiles[0].destination += $container | .outputFiles[1].destination += $container | .+=$resources | .multiInstanceSettings.numberOfInstances=$numnodes | .multiInstanceSettings.coordinationCommandLine=$coordCli | .multiInstanceSettings+=$commonresources ' \
-    --arg tid $taskid \
-    --arg cmdline "$commandline" \
-    --arg numnodes $numnodes \
-    --arg coordCli "$coordination" \
-    --argjson container "$container" \
-    --argjson resources "$resources" \
-    --argjson commonresources "$commonresources" \
-    --argjson applicationPackageReferences "$applicationPackageReferences" \
-    --argjson envSettings "$envSettings" $job_template > $job_params
+if [ "$mpi_job" = true ]; then
+    jq '.id=$tid | . += $envSettings | . += $applicationPackageReferences  | .commandLine=$cmdline | .outputFiles[0].destination += $container | .outputFiles[1].destination += $container | .+=$resources | .multiInstanceSettings.numberOfInstances=$numnodes | .multiInstanceSettings.coordinationCommandLine=$coordCli | .multiInstanceSettings+=$commonresources ' \
+        --arg tid $taskid \
+        --arg cmdline "$commandline" \
+        --arg numnodes $numnodes \
+        --arg coordCli "$coordination" \
+        --argjson container "$container" \
+        --argjson resources "$resources" \
+        --argjson commonresources "$commonresources" \
+        --argjson applicationPackageReferences "$applicationPackageReferences" \
+        --argjson envSettings "$envSettings" $job_template > $job_params
+else
+    jq '.id=$tid | . += $envSettings | . += $applicationPackageReferences  | .commandLine=$cmdline | .outputFiles[0].destination += $container | .outputFiles[1].destination += $container | .+=$resources ' \
+        --arg tid $taskid \
+        --arg cmdline "$commandline" \
+        --argjson container "$container" \
+        --argjson resources "$resources" \
+        --argjson applicationPackageReferences "$applicationPackageReferences" \
+        --argjson envSettings "$envSettings" $job_template > $job_params
+fi
 
 az batch task create \
     --job-id $job_id \
