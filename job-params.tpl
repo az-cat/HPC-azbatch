@@ -12,7 +12,10 @@ numnodes=$1
 coordination='bash $AZ_BATCH_TASK_SHARED_DIR/'${coordinationscript}
 
 # the command line to be started
+# for Linux use
 commandline='bash $AZ_BATCH_TASK_WORKING_DIR/'${jobscript}' <param1> <param2> <param3>'
+# for Windows use
+#commandline='cmd /c %AZ_BATCH_TASK_WORKING_DIR%\'${jobscript}' <param1> <param2> <param3>'
 
 # input directory that contains data to be uploaded for that task
 input_dir=
