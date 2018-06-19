@@ -103,7 +103,7 @@
           "publicIPAllocationMethod": "Dynamic",
           "idleTimeoutInMinutes": 4,
           "dnsSettings": {
-            "domainNameLabel": "[concat('login', variables('namingInfix'))]"
+            "domainNameLabel": "[concat(variables('namingInfix'), 'login')]"
           }
         },
         "dependsOn": []
