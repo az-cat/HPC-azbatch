@@ -1,0 +1,112 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "vnetName": {
+            "maxLength": 32,
+            "type": "string",
+            "metadata": {
+            "description": "Name of the VNET to create"
+        }
+      }
+    },
+    "variables": {
+      "namingInfix": "[toLower(take(uniqueString(resourceGroup().id), 6))]",
+      "resourceLocation": "[resourceGroup().location]",
+  
+      "networkApiVersion": "2017-06-01"
+    },
+    "resources": [
+      {
+        "type": "Microsoft.Network/virtualNetworks",
+        "name": "[parameters('vnetName')]",
+        "apiVersion": "[variables('networkApiVersion')]",
+        "location": "[variables('resourceLocation')]",
+        "properties": {
+          "addressSpace": {
+            "addressPrefixes": [
+              "10.0.0.0/20"
+            ]
+          },
+          "subnets": [
+            {
+            "name": "admin",
+            "properties": {
+                "addressPrefix": "10.0.1.0/28",
+                "networkSecurityGroup" : 
+                {
+                    "id" : "[resourceId('Microsoft.Network/networkSecurityGroups', 'admin-nsg')]"
+                }
+            }
+            },
+            {
+            "name": "compute",
+            "properties": {
+                "addressPrefix": "10.0.2.0/23"
+            }
+            }
+          ],
+          "virtualNetworkPeerings": []
+        },
+        "dependsOn": [ 
+            "admin-nsg"
+        ]
+      },
+      {
+        "type": "Microsoft.Network/networkSecurityGroups",
+        "name": "admin-nsg",
+        "apiVersion": "[variables('networkApiVersion')]",
+        "location": "[variables('resourceLocation')]",
+        "properties": {
+          "securityRules": [
+            {
+              "name": "default-allow-ssh",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "22",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1000,
+                "direction": "Inbound",
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+              }
+            },
+            {
+              "name": "default-allow-rdp",
+              "properties": {
+                "protocol": "Tcp",
+                "sourcePortRange": "*",
+                "destinationPortRange": "3389",
+                "sourceAddressPrefix": "*",
+                "destinationAddressPrefix": "*",
+                "access": "Allow",
+                "priority": 1001,
+                "direction": "Inbound",
+                "sourceAddressPrefixes": [],
+                "destinationAddressPrefixes": []
+              }
+            }
+          ]
+        },
+        "dependsOn": []
+      },
+      {
+        "type": "Microsoft.Network/publicIPAddresses",
+        "name": "login_ip",
+        "apiVersion": "[variables('networkApiVersion')]",
+        "location": "[variables('resourceLocation')]",
+        "properties": {
+          "publicIPAddressVersion": "IPv4",
+          "publicIPAllocationMethod": "Dynamic",
+          "idleTimeoutInMinutes": 4,
+          "dnsSettings": {
+            "domainNameLabel": "[concat('login', variables('namingInfix'))]"
+          }
+        },
+        "dependsOn": []
+      }
+    ]
+  }
