@@ -11,7 +11,7 @@
       }
     },
     "variables": {
-      "namingInfix": "[toLower(take(uniqueString(resourceGroup().id), 6))]",
+      "namingInfix": "[toLower(take(uniqueString(resourceGroup().id), 12))]",
       "resourceLocation": "[resourceGroup().location]",
   
       "networkApiVersion": "2017-06-01"
@@ -103,7 +103,7 @@
           "publicIPAllocationMethod": "Dynamic",
           "idleTimeoutInMinutes": 4,
           "dnsSettings": {
-            "domainNameLabel": "[concat(variables('namingInfix'), 'login')]"
+            "domainNameLabel": "[variables('namingInfix')]"
           }
         },
         "dependsOn": []
