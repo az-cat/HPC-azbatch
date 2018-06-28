@@ -40,16 +40,22 @@ az storage container policy create \
 echo "generating sas key for container $container_name"
 saskey=$(az storage container generate-sas --policy-name "read" --name ${container_name} --account-name ${storage_account_name} | jq -r '.')
 
+if [ -z "$nodeFillType"]; then
+    nodeFillType="spread"
+fi
+
 nodeprep_uri="https://${storage_account_name}.blob.core.windows.net/${container_name}/${nodeprep}?${saskey}"
 jq '.id=$poolId | 
     .vmSize=$vmSize | 
     .maxTasksPerNode= $ppn |
+    .taskSchedulingPolicy.nodeFillType=$nodeFillType |
     .virtualMachineConfiguration.nodeAgentSKUId=$node_agent | 
     .startTask.resourceFiles[0].blobSource=$blob' ${pool_template} \
     --arg blob "$nodeprep_uri" \
     --arg poolId "$pool_id" \
     --arg vmSize "$vm_size" \
     --arg ppn $taskpernode \
+    --arg nodeFillType "$nodeFillType" \
     --arg node_agent "$node_agent" > $poolfile
 
 # check for custom Image or Gallery Image
