@@ -47,3 +47,10 @@ app_package=
 # The virtual network must be in the same region and subscription as the Azure Batch account
 # /subscriptions/{subscription}/resourceGroups/{group}/providers/Microsoft.Network/virtualNetworks/{network}/subnets/{subnet}
 pool_vnet=
+
+# pool specific environment variables
+# format is '[{"name":"variable1", "value":"value1"},{"name":"variable2", "value":"value2"}]'
+poolenvsettings='[]'
+
+# example for Batch-Insights monitoring https://github.com/Azure/batch-insights
+# poolenvsettings='[{"name":"APP_INSIGHTS_INSTRUMENTATION_KEY", "value":""}, {"name":"APP_INSIGHTS_APP_ID", "value":""}]'
