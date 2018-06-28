@@ -40,7 +40,7 @@ az storage container policy create \
 echo "generating sas key for container $container_name"
 saskey=$(az storage container generate-sas --policy-name "read" --name ${container_name} --account-name ${storage_account_name} | jq -r '.')
 
-if [ -z "$nodeFillType"]; then
+if [ -z "$nodeFillType" ]; then
     nodeFillType="spread"
 fi
 
