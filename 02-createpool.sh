@@ -11,7 +11,6 @@ source $1
 pool_template=$2
 
 required_envvars pool_id vm_size vm_image node_agent container_name storage_account_name AZURE_BATCH_ACCOUNT nodeprep taskpernode
-#envsettings="./${pool_id}-envsettings.json"
 poolfile=${pool_id}-pool.json
 
 echo "create pool container"
@@ -86,10 +85,9 @@ if [ -n "$poolenvsettings" ]; then
 else
     envSettings=$(jq -n '.environmentSettings=[]')
 fi
-#envSettings=$(jq '.environmentSettings[.environmentSettings| length] += $data' --argjson data "$envVariable" <<< $envSettings)
 
-if [ -f $envsettings ]; then
-    jq '.startTask += $data' $poolfile --argjson data "$envsettings" > tmp.json
+if [ -n "$envSettings" ]; then
+    jq '.startTask += $data' $poolfile --argjson data "$envSettings" > tmp.json
     cp tmp.json $poolfile
     rm tmp.json    
 fi
