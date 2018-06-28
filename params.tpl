@@ -14,7 +14,7 @@ vm_size=Standard_H16r
 # max task per node. 1 for MPI. number of cores for embarassingly parrallel tasks
 taskpernode=1
 # nodeFillType is spread or pack
-nodeFillType=
+nodeFillType=spread
 
 # The image reference is in the format: {publisher}:{offer}:{sku}:{version} where {version} is
 # optional and will default to 'latest'.
